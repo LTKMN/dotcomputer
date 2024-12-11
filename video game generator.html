@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Righteous');
+        
+        h1 {
+            font-family: 'Righteous', 'Droid Serif', sans-serif;
+            font-size: 60px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-align: center;
+            color: #ef757a;
+            text-shadow: 0 4px 0 #1b1b19;
+        }
+        
+        body {
+            background-color: #3e3e3c;
+        }
+        
+        a {
+            text-decoration: none;
+            color: #31e694;
+        }
+        
+        p {
+            text-align: center;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="wordContainer"></div>
+    <p><a href="#" onclick="generateWords(); return false;">Generate again</a></p>
+
+    <script>
+        // First and middle words arrays stay the same
+        const firstWords = [
+            "Shiny", "Professional", "Nefarious", "Crystalline", "Bjorkesque",
+            "Automatic", "Mathematical", "Algebraic", "Radical", "Tubular",
+            "Post-modern", "Pre-apocalyptic", "Charismatic", "Void", "distilled",
+            "Vigilante", "Dilettante", "Cyber", "Turbo-charged", "Architectural",
+            "Kafkaesque", "3D", "Slimy", "Lead-based", "White", "Gratuitous",
+            "Meaty", "Infinite", "Sapphire", "Tele", "Diseased", "Recycled",
+            "20 percent", "Bleached", "Irresponsible", "Basically", "Ruby-throated",
+            "Emerald", "Augmented", "Non-edible", "Believable", "Degauss", "Turing",
+            "Based on your DNA", "Mediocre", "Dancing", "Heavy",
+            "Rythymic", "Nutritious", "Factual", "Hot pink", "Onyx", "Rated",
+            "Mistaken", "Deliberate", "Space cowboy", "Ocean blue", "Qwartz",
+            "Baldheaded", "Cherry filled", "Running", "Hardcore", "Rhodonite",
+            "Lobster faced", "Duke of", "Drunken", "Hunting", "Anonymous",
+            "Aquamarine", "Instructions for", "Neon", "shirt size:", "Sleazy",
+            "Greasy", "Turbomatic", "Attractive", "Petroleum-based",
+            "The accident caused", "Porcelain", "Call your", "Director of",
+            "Defender of", "Sneaky", "Shifty", "Wrong", "Cascadian", "Smashed",
+            "Designated", "Slick eyed", "Smoking", "Smooth", "Teal-glassed",
+            "Obsidian", "Icy", "Orange-yellow", "Metro", "Phase-locked",
+            "Isopropyl", "Acrylic", "Glassy", "Amethyst", "Foggy", "Steamy",
+            "Soviet", "American", "Flammable", "Interplanetary",
+            "four dimensional", "Procedurally generated", "Saxophone playing",
+            "Televised", "Evocative", "Crystal", "Digital", "Online", "Analog",
+            "Offline", "Flame-inducing", "Water-soluble", "Diversified",
+            "Toasted", "Low standard", "Sterling", "Hysterical", "Celebrated",
+            "Privatized", "Governmental", "Overarching", "Rocket powered",
+            "Electrifying", "Fluorescent", "Professional", "Commando", "Placebo",
+            "Chrome", "Proto", "Exo", "Dyna", "Hydro", "Super", "Mega",
+            "Dangerous", "Sargeant", "Agent", "Master", "Ninja", "Leaking",
+            "Cyborg", "Transexual", "Nebulous", "Cryptic", "Well-dressed",
+            "Groomed", "Dapper", "Sartorial", "Well designed", "Tiger eyed",
+            "Ominous", "Cursed", "Infernal", "Dubious", "Secretive",
+            "Underground", "concentric circles of", "Distribution of", "failed",
+            "flailing", "peaceful", "overweight", "futuristic", "ephemeral",
+            "overly hasty", "overwhelming", "bureaucracies of", "dysfunctional",
+            "deconstructed", "unsustainable", "threatening", "covert", "elusive",
+            "yikes! it's a", "funky", "yamaha's new", "hyper-realistic", "voxel-based", "minimalist", "high-octane",
+            "8-bit", "16-bit", "cozy-maxxing", "grimdark", "cyberpunk",
+            "fourth-wall-breaking", "text-based", "asset-flipped"
+        ];
+        const middleWords = [
+            "carbon steel", "professional", "nefarious", "automatic", "cold-blooded",
+            "charismatic", "mathematical", "algebraic", "radical", "tubular",
+            "post-modern", "pre-apocalyptic", "post-apocalyptic", "neon", "lead",
+            "glossy", "glassy", "matte", "augmented", "power-assisted", "cyber",
+            "phone", "jacked", "soviet", "american", "gratuitous", "gold",
+            "infinite", "two-way", "silver", "stolen", "3D", "50 percent recycled",
+            "bleached", "irresponsible", "broken", "dented", "rainy", "third rail",
+            "lawless", "lawful", "covered", "bored", "sexy", "non-edible",
+            "dancing", "swiftly moving", "heavily armed", "perfectly timed",
+            "retrained", "rebuilt", "augmented", "leviathan", "digital",
+            "corporate", "tele", "spaced out", "procedurally generated",
+            "godsforsaken", "hidden", "tuned", "refined", "30th floor", "tattooed",
+            "sickening", "lightweight", "15 FPS", "revenge", "ostracized",
+            "family", "instructional", "neon", "burning", "marginalized",
+            "razor-edged", "neo", "super", "mega", "ultra", "proto", "exo",
+            "hydro", "inferno", "eating", "gusto", "purple-red", "green-teal",
+            "emerald-green", "milky white", "pitch black", "bushy moustached",
+            "exploring", "ultimate", "ordered", "continuous", "jazzy", "exotic",
+            "bluesy", "sneaky", "Canadian", "friggin'", "urban", "underground",
+            "master", "ninja", "kung-fu", "motorcycle", "scissor-kicking",
+            "fire-spreading", "Asian", "chrome", "angular", "greasy", "steely",
+            "loving", "software", "hardware", "wetware", "human", "alien", "magic",
+            "#FFFFFF", "sapphire", "qwartz", "normcore", "darknet", "outernet",
+            "hacking", "sexting", "confidential", "eternal", "stomping",
+            "augmented", "galactic", "akimbo", "laser", "mind controlling",
+            "ghostly", "DRM protected", "shooting", "invading", "ashamed",
+            "trivial", "twinkling", "gurgling", "screaming", "eating", "bone",
+            "pipe", "naked", "luxury", "powerful", "friends", "phreaking",
+            "heart broken", "isometric", "scurvy", "matrix", "mecha", "robo",
+            "techno", "guzzling", "x-ray", "invisibile", "hyperactive", "meme",
+            "shadow", "meets", "ivory", "distributed", "crimson", "marble",
+            "slate", "stone", "wet", "low-poly", "high-def", "gem", "scuba",
+            "stealth", "prismatic", "hexagonal", "staged", "divergent", "turbine",
+            "pulsing", "designed", "throbbing", "sprawling", "machined", "dusty",
+            "dirty", "exiled", "magnetic", "weapons grade", "ill-fitting",
+            "barcoded", "dual-wielding", "tokyo-based", "brazilian", "japanese",
+            "drifting", "alternative", "jet fuel based", "hyper-threaded",
+            "seismic", "coated", "watered down", "corrupt", "sub-zero",
+            "ice cold", "furnace tempered", "forged steel", "anime", "dot-matrix",
+            "brooding", "nebbish", "sacharine", "typical", "unceremonious",
+            "quintessential", "intolerant", "inexplicable", "well-balanced",
+            "basket of", "barrel of", "lossy", "interstellar", "probiotic",
+            "dripping", "lachrymose", "electric", "hyper-real", "waterlogged",
+            "sacrilegious", "omniscient", "all-knowing", "quaint", "uncouth",
+            "hopeful", "self-sufficient", "fuel-efficient", "synaesthetic",
+            "sensual", "pleated"
+        ];
+
+        const lastWords = [
+            "kart racer",
+            "dating sim",
+            "cooking game",
+            "JRPG",
+            "ARPG",
+            "FPS",
+            "third person shooter",
+            "rhythm game",
+            "point and click adventure",
+            "match-three",
+            "transport tycoon",
+            "parkour game",
+            "walking simulator",
+            "roguelike",
+            "metroidvania",
+            "tower defense",
+            "survival horror",
+            "battle royale",
+            "city builder",
+            "dungeon crawler",
+            "fishing sim",
+            "farming sim",
+            "life sim",
+            "visual novel",
+            "bullet hell",
+            "beat-em-up",
+            "hack and slash",
+            "souls-like",
+            "racing sim",
+            "flight sim",
+            "idle game",
+            "gacha game",
+            "deck builder",
+            "management sim",
+            "platformer",
+            "stealth game",
+            "puzzle platformer",
+            "space sim",
+            "rail shooter",
+            "open world sandbox",
+            "mech simulator",
+            "horror game",
+            "clicker game",
+            "rogue-lite",
+            "card battler",
+            "auto-runner",
+            "base builder",
+            "drift racer",
+            "spaceship racing game",
+            "pachinko",
+            "gambling simulator",
+            "survival mecha",
+            "computer hacking",
+            "puzzle horror",
+            "balatro-like",
+            "mario kart shooter",
+            "but it's factorio",
+            "but it's stardew valley"
+        ];
+
+        function getRandomWord(wordList) {
+            return wordList[Math.floor(Math.random() * wordList.length)];
+        }
+
+        function generateWords() {
+            const container = document.getElementById('wordContainer');
+            container.innerHTML = '';
+            
+            // First word (from first list)
+            const h1First = document.createElement('h1');
+            h1First.textContent = getRandomWord(firstWords);
+            container.appendChild(h1First);
+            
+            // Middle two words (from second list)
+            for (let i = 0; i < 2; i++) {
+                const h1Middle = document.createElement('h1');
+                h1Middle.textContent = getRandomWord(middleWords);
+                container.appendChild(h1Middle);
+            }
+            
+            // Last word (from final list)
+            const h1Last = document.createElement('h1');
+            h1Last.textContent = getRandomWord(lastWords);
+            container.appendChild(h1Last);
+        }
+
+        // Initial generation
+        generateWords();
+    </script>
+</body>
+</html>
