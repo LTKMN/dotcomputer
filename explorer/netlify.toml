@@ -1,12 +1,20 @@
-[
-build
-]
+[build]
   publish = "public"
   functions = "netlify/functions"
 
-[[
-redirects
-]]
+# Our magical portal redirects! ✨
+[[redirects]]
+  from = "/explorer/*"
+  to = "/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/explorer"
+  to = "/index.html"
+  status = 200
+
+# This is our quantum safety net - catching all other paths! 🌌
+[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
