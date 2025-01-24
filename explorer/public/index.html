@@ -190,23 +190,28 @@
     </div>
 
     <script>
-        async function fetchPosts() {
-    const handle = document.getElementById('handle').value;
+    async function fetchPosts() {
+    const handle = document.getElementById('handle').value.trim();
     const numPosts = document.getElementById('numPosts').value;
     const postsDiv = document.getElementById('posts');
     
+    // Add some CLIENT-SIDE validation sparkles! ✨
     if (!handle) {
         postsDiv.innerHTML = `
             <div class="error">
-                Please enter a Bluesky handle! Our quantum sensors need something to lock onto! 🎯
+                Please enter a Bluesky handle! Our quantum sensors are lonely! 🎯
             </div>
         `;
         return;
     }
+
+    // Let's show what we're actually sending! 🔍
+    console.log('Sending request with:', { handle, numPosts });
     
     postsDiv.innerHTML = `
         <div class="loading">
-            Initiating quantum fetch sequence... 🌌
+            <div>Initiating quantum fetch sequence... 🌌</div>
+            <div><small>Attempting to fetch posts for ${handle}</small></div>
         </div>
     `;
     
@@ -214,14 +219,33 @@
         const response = await fetch('/.netlify/functions/fetchPosts', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'  // CRITICAL for proper JSON transmission!
+                'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ handle, numPosts })
+            body: JSON.stringify({ 
+                handle: handle,
+                numPosts: parseInt(numPosts)
+            })
         });
         
-        const result = await response.json();
+        // Let's see what we got back! 👀
+        console.log('Response status:', response.status);
+        const responseText = await response.text();
+        console.log('Raw response:', responseText);
+
+        // Now try to parse it
+        let result;
+        try {
+            result = JSON.parse(responseText);
+        } catch (parseError) {
+            console.error('JSON Parse Error:', parseError);
+            throw new Error(`Failed to parse response: ${responseText.substring(0, 100)}...`);
+        }
         
         if (response.ok && result.success) {
+            if (!result.data || !Array.isArray(result.data)) {
+                throw new Error('Invalid response format: expected data array');
+            }
+
             postsDiv.innerHTML = result.data.length ? 
                 result.data.map(post => `
                     <div class="post">
@@ -236,9 +260,11 @@
             throw new Error(result.error || 'Failed to fetch posts from the quantum realm');
         }
     } catch (error) {
+        console.error('Fetch Error:', error);
         postsDiv.innerHTML = `
             <div class="error">
                 🌠 Quantum entanglement failed: ${error.message}
+                <br><small>Check the console for more quantum details!</small>
             </div>
         `;
     }

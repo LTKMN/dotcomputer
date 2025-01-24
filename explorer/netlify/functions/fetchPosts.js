@@ -1,28 +1,42 @@
 const { BskyAgent } = require('@atproto/api');
 
 exports.handler = async function(event, context) {
-  // Our trusty CORS shield! 🛡️
+  // Let's add some SERIOUS debugging first! 🔍
+  console.log('Incoming event:', {
+    body: event.body,
+    method: event.httpMethod,
+    headers: event.headers
+  });
+
   const headers = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS'
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    'Content-Type': 'application/json'  // CRUCIAL for proper JSON response!
   };
 
   if (event.httpMethod === 'OPTIONS') {
-    return { statusCode: 200, headers, body: '' };
+    return { 
+      statusCode: 200, 
+      headers, 
+      body: JSON.stringify({ message: 'CORS preflight successful!' })
+    };
   }
 
   try {
-    // Carefully extract our quantum parameters
+    // Parse with extra safety nets! 🕸️
     let requestBody;
     try {
-      requestBody = JSON.parse(event.body || '{}');
+      requestBody = event.body ? JSON.parse(event.body) : {};
+      console.log('Parsed request body:', requestBody);
     } catch (parseError) {
+      console.error('JSON Parse Error:', parseError);
       return {
         statusCode: 400,
         headers,
         body: JSON.stringify({
-          error: 'Invalid request format - our JSON parser got cosmic vertigo!'
+          error: 'Invalid JSON in request body',
+          details: parseError.message
         })
       };
     }
@@ -34,53 +48,58 @@ exports.handler = async function(event, context) {
         statusCode: 400,
         headers,
         body: JSON.stringify({
-          error: 'Handle is required for our quantum entanglement to work!'
+          error: 'Handle is required!',
+          received: requestBody
         })
       };
     }
 
-    // Initialize our Bluesky quantum tunnel
-    const agent = new BskyAgent({ service: 'https://bsky.social' });
+    // Initialize Bluesky with DEBUG MODE ON! 🚀
+    const agent = new BskyAgent({ 
+      service: 'https://bsky.social'
+    });
+
+    console.log('Attempting to resolve handle:', handle);
+    const profile = await agent.resolveHandle({ handle });
+    console.log('Profile resolved:', profile.data);
+
+    console.log('Fetching feed for DID:', profile.data.did);
+    const posts = await agent.getAuthorFeed({
+      actor: profile.data.did,
+      limit: parseInt(numPosts)
+    });
     
-    // First, let's make sure our handle exists in this dimension
-    try {
-      const profile = await agent.resolveHandle({ handle });
-      
-      // Now fetch their feed with extra error handling!
-      const posts = await agent.getAuthorFeed({
-        actor: profile.data.did,
-        limit: parseInt(numPosts)
-      });
+    console.log('Feed fetched, post count:', posts.data.feed.length);
 
-      // Transform our posts into pristine JSON structures
-      const plainTextPosts = posts.data.feed.map(post => ({
-        text: post.post.record.text,
-        createdAt: new Date(post.post.record.createdAt).toISOString()
-      }));
+    const plainTextPosts = posts.data.feed.map(post => ({
+      text: post.post.record.text,
+      createdAt: new Date(post.post.record.createdAt).toISOString()
+    }));
 
-      return {
-        statusCode: 200,
-        headers,
-        body: JSON.stringify({ success: true, data: plainTextPosts })
-      };
-      
-    } catch (apiError) {
-      console.error('Bluesky API error:', apiError);
-      return {
-        statusCode: 500,
-        headers,
-        body: JSON.stringify({
-          error: `Failed to fetch posts: ${apiError.message}`
-        })
-      };
-    }
-  } catch (error) {
-    console.error('General error:', error);
+    // Return with ALL THE SAFETY CHECKS! 🛡️
     return {
-      statusCode: 500,
+      statusCode: 200,
       headers,
       body: JSON.stringify({
-        error: 'A cosmic anomaly occurred while fetching posts!'
+        success: true,
+        data: plainTextPosts,
+        meta: {
+          handle,
+          postsRequested: numPosts,
+          postsRetrieved: plainTextPosts.length
+        }
+      })
+    };
+
+  } catch (error) {
+    console.error('Operation failed:', error);
+    return {
+      statusCode: error.statusCode || 500,
+      headers,
+      body: JSON.stringify({
+        error: error.message || 'Internal quantum fluctuation detected',
+        type: error.name,
+        stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
       })
     };
   }
