@@ -3,6 +3,12 @@
   "version": "1.0.0",
   "description": "A cosmic tool to explore Bluesky posts!",
   "dependencies": {
-    "@atproto/api": "^0.3.0"
+    "@atproto/api": "^0.3.0",
+    "@netlify/functions": "^2.8.2",
+    "@types/node": "^20.17.16"
+  },
+  "scripts": {
+    "dev": "netlify dev",
+    "build": "netlify build"
   }
 }
