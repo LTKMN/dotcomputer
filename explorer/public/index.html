@@ -191,55 +191,58 @@
 
     <script>
         async function fetchPosts() {
-            const handle = document.getElementById('handle').value;
-            const numPosts = document.getElementById('numPosts').value;
-            const postsDiv = document.getElementById('posts');
-            
-            if (!handle) {
-                postsDiv.innerHTML = `
-                    <div class="error">
-                        Please enter a Bluesky handle! 🌠
+    const handle = document.getElementById('handle').value;
+    const numPosts = document.getElementById('numPosts').value;
+    const postsDiv = document.getElementById('posts');
+    
+    if (!handle) {
+        postsDiv.innerHTML = `
+            <div class="error">
+                Please enter a Bluesky handle! Our quantum sensors need something to lock onto! 🎯
+            </div>
+        `;
+        return;
+    }
+    
+    postsDiv.innerHTML = `
+        <div class="loading">
+            Initiating quantum fetch sequence... 🌌
+        </div>
+    `;
+    
+    try {
+        const response = await fetch('/.netlify/functions/fetchPosts', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'  // CRITICAL for proper JSON transmission!
+            },
+            body: JSON.stringify({ handle, numPosts })
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok && result.success) {
+            postsDiv.innerHTML = result.data.length ? 
+                result.data.map(post => `
+                    <div class="post">
+                        <div>${escapeHtml(post.text)}</div>
+                        <div class="timestamp">
+                            ${new Date(post.createdAt).toLocaleString()}
+                        </div>
                     </div>
-                `;
-                return;
-            }
-            
-            postsDiv.innerHTML = `
-                <div class="loading">
-                    Fetching cosmic waves... 🛸
-                </div>
-            `;
-            
-            try {
-                const response = await fetch('/.netlify/functions/fetchPosts', {
-                    method: 'POST',
-                    body: JSON.stringify({ handle, numPosts })
-                });
-                
-                const posts = await response.json();
-                
-                if (response.ok) {
-                    postsDiv.innerHTML = posts.length ? 
-                        posts.map(post => `
-                            <div class="post">
-                                <div>${escapeHtml(post.text)}</div>
-                                <div class="timestamp">
-                                    ${new Date(post.createdAt).toLocaleString()}
-                                </div>
-                            </div>
-                        `).join('') :
-                        `<div class="error">No posts found in this corner of the cosmos! 🌌</div>`;
-                } else {
-                    throw new Error(posts.error || 'Failed to fetch posts');
-                }
-            } catch (error) {
-                postsDiv.innerHTML = `
-                    <div class="error">
-                        🌠 Cosmic interference detected: ${error.message}
-                    </div>
-                `;
-            }
+                `).join('') :
+                `<div class="error">No posts found in this corner of the cosmos! 🌌</div>`;
+        } else {
+            throw new Error(result.error || 'Failed to fetch posts from the quantum realm');
         }
+    } catch (error) {
+        postsDiv.innerHTML = `
+            <div class="error">
+                🌠 Quantum entanglement failed: ${error.message}
+            </div>
+        `;
+    }
+}
 
         // Protect against XSS like a cosmic shield! 🛡️
         function escapeHtml(unsafe) {
