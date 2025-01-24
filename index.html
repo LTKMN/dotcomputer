@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>brennan dot computer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Germania+One&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #16191c;
+            --text-color: #768386;
+            --accent1: #8b9972;
+            --accent2: #cd8374;
+            --accent3: #e5f0c1;
+            --code-bg: #d1cec7;
+            --border-color: #8fa396;
+        }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+            font-size: 1.2em;
+            color: var(--text-color);
+            background: var(--bg-color);
+        }
+        a {
+            color: var(--accent3);
+            text-decoration: none;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        a:hover {
+            text-shadow: 
+                -1px 0 #ee0e51,
+                1px 0 #abf6eb;
+            letter-spacing: 1px;
+        }
+        
+        a:after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background: var(--accent3);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        a:hover:after {
+            transform: scaleX(1);
+        }
+        pre {
+            background: var(--code-bg);
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+        code {
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 2px;
+        }
+        h1 {
+            color: var(--accent1);
+            font-size: 3em;
+            font-family: 'Germania One';
+        }
+        h2, h3 {
+            margin-top: 5rem;
+            margin-bottom: 0.5rem;
+            color: var(--accent2);
+            font-size: 2em;
+            font-family: 'Germania One';
+        }
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-color);
+            padding: 1rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>brennan.computer</h1>
+    <h3>list of projects and ideas:</h3>
+    <ul>
+      <li>a lil <a href="https://bsky.app/profile/fluorentine.bsky.social">LLM bluesky bot</a> and associated <a href="https://fluorentine.netlify.app/">tutorial page</a></li>
+      <li>[STILL SECRET] hardware bluetooth controller</li>
+      <li>silly video <a href="https://brennanletkeman.com/videogame.html">game genre generator</a></li>
+      <li>half finished game for your phone that gives you random nearby IRL locations to bike / walk to, to "make deliveries" to animal crossing style characters. just for fun and exercise.</li>
+      <li>unmade game for the kickr stationary bike that feels as fast as wipeout style racing games, but controlled by pedalling</li>
+      <li>unmade setup where the kickr controls social media scrolling, with the joke being that you have to pedal SO MUCH to scroll even a tiny bit down</li>
+      <li>unfinished prototype for <a href="https://bsky.app/profile/brennan.computer/post/3lbnge6vr2c2l">encoding highly compressed GLTF 3D models</a> into the alt text data of bluesky posts, which are more generous than the main text field.</li>
+      <li>brennan.pizza was a website that tracked and graphed every pizza I ate for a year. (now defunct)</li>
+    </ul>
+   
+    <h3>other links:</h3>
+    <ul>
+      <li><a href="https://brennanletkeman.com/">main portfolio site</a></li>
+      <li><a href="https://twitter.com/letkma">twitter</a></li>
+      <li><a href="https://bsky.app/profile/brennan.computer">bluesky</a></li>
+
+      <footer>
+        with love, brennan.computer
+    </footer>
+</body>
+</html>
