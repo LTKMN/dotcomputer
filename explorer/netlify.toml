@@ -1,7 +1,7 @@
 [build]
-  publish = "explorer/public"
-  functions = "explorer/netlify/functions"
-  base = "explorer"
+  publish = "public"
+  functions = "netlify/functions"
+  base = "explorer"       
 
 [[redirects]]
   from = "/*"
