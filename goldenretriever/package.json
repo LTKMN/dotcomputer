@@ -1,0 +1,8 @@
+{
+  "name": "bluesky-explorer",
+  "version": "1.0.0",
+  "description": "A cosmic tool to explore Bluesky posts!",
+  "dependencies": {
+    "@atproto/api": "^0.3.0"
+  }
+}
